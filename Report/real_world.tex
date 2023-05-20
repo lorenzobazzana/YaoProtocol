@@ -1,0 +1,15 @@
+\section{Applications of MPC}\label{sec:rl}
+
+Multi-Party Computation can be applied in real world \textit{data analysis} scenarios where data privacy is required (for example, privacy-preserving machine learning and secure genomic sequence comparison~\cite{applications}).
+
+MPC has only recently seen large scale practical applications: the first relevant use of MPC for commercial applications was in the 2008 beet auction in Denmark between the nation's beet sugar producer ``Danisco" and Danish farmers~\cite{beet}. From there many other practical uses of MPC have emerged; some of those will be presented in the following.
+
+\subsection{MPC wallets for Blockchain applications}
+
+MPC has been employed in blockchain private key management in the so called ``MPC wallets" such as ``ZenGo"\footnote{ZenGo: \href{https://zengo.com}{https://zengo.com}} and ``Coinbase"\footnote{Coinbase: \href{https://www.coinbase.com/}{https://www.coinbase.com/}}, which make use of MPC to divide private keys among different actors, with the aim to avoid key theft and removing single points of failure (SPOF) in key management: even if a single part of a key distributed among $n$ parties is compromised, the relative wallet is still safe from attacks, since all shares are required to sign a transaction, and MPC signatures can only be computed via authentication of the parties.
+
+\subsection{Private databases}
+
+Another application of MPC techniques is Private Data as a Service (PDaaS): privacy is an ever important requirement for data management, and for this reason being able to perform operations on data without revealing or decrypting it makes MPC the prominent tool in the field.
+
+An example of such PDaaS is Galois, inc.'s ``Jana", a distributed and scalable database model where every SQL operation is performed on encrypted data, using different kinds of encryption that allow data comparison in some form, even though this implies a small amount of information leakage (a trade that is necessary to maintain general privacy)~\cite{jana}.

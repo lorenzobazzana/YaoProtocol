@@ -1,0 +1,76 @@
+\section{Computation and communication description}
+
+The idea behind the computation is that, since the implemented function must calculate the maximum of two sets of values, each party can compute the max of their own values locally, while the global maximum can be computed using Yao's garbled circuit.
+
+\subsection{Local computation}
+
+The local computation is exactly the same between both parties; the pseudocode of the local maximum computation is described by algorithm~\ref{algo:local_max}.
+
+\begin{algorithm}
+    \DontPrintSemicolon
+    \caption{Algorithm used to compute the local maximum}\label{algo:local_max}
+    \SetKwProg{Fn}{function}{:}{}
+    \SetKw{and}{and}
+    \Fn{\FuncSty{local\_max()}}{
+        $input\_list \gets $array(user\_inputs())\;
+        filter\_invalid\_inputs($input\_list$)\;
+        $max\_value \gets$ max($input\_list$)\;
+        \uIf{$max\_value \ge -2^{31}$ \and $max\_value \le 2^{31}-1$}{
+            \KwRet max($input\_list$)\;
+        }\Else{
+            \textbf{error:} ``Integer out of range"\;
+        }
+        
+    }
+    
+\end{algorithm}
+
+\subsection{Alice's communication to Bob}
+
+Alice is the circuit generator, meaning that she must create the garbled tables that are later evaluated by Bob; she must also communicate the circuit to Bob beforehand. Since the circuit is dynamically generated based on the required number of bits (as described in section \ref{circuit}), there is a brief exchange with Bob regarding the size of the circuit. After that, the actual Yao's protocol exchange is started.
+
+Alice's communication to Bob is described by algorithm~\ref{algo:a2b}.
+
+\begin{algorithm}
+    \DontPrintSemicolon
+    \caption{Pseudocode of Alice's communication to Bob}\label{algo:a2b}
+    $alice\_max \gets$ local\_max()\;
+    \BlankLine
+    $circuit \gets$ generate\_circuit(32-bits)\;
+    $garbled\_circuit \gets$ garble($circuit$)\;
+    send(bob, $garbled\_circuit$)\;
+    $binary\_input \gets $ convert\_to\_binary($alice\_max$)\;
+    $encrypted\_input \gets encrypt(binary\_input)$\;
+    $bob\_keys \gets $ generate\_keys()\;
+    send(ot, $encrypted\_input$, $bob\_keys$)\;
+    $circuit\_result \gets$ receive(ot)
+    \BlankLine
+    verify\_result($circuit\_result$)
+\end{algorithm}
+
+\subsection{Bob's communication to Alice}
+
+Bob is the party that must evaluate the circuit, given the garbled tables and the secret keys relative to his own inputs; these keys are obtained via the \textit{Oblivious Transfer} (OT) protocol. Bob must also communicate to Alice the required bits needed to represent his local maximum before Yao's protocol can actually take place. Algorithm~\ref{algo:b2a} explains Bob's communication to Alice.
+
+\begin{algorithm}
+    \DontPrintSemicolon
+    \caption{Pseudocode of Bob's communication to Alice}\label{algo:b2a}
+    $bob\_max \gets$ local\_max()\;
+    \BlankLine
+    $garbled\_circuit \gets$ receive(alice)\;
+    $binary\_input \gets $ convert\_to\_binary($bob\_max$)\;
+    send(ot, $binary\_input$)\;
+    $bob\_keys \gets$ receive(ot)\;
+    $circuit\_result \gets$ evaluate($garbled\_circuit, bob\_keys$)\;
+    send(ot, $circuit\_result$)\;
+    \BlankLine
+    verify\_result($circuit\_result$)
+\end{algorithm}
+
+\subsection{Security of the protocol}
+
+The key points that must be considered when analyzing Yao's protocol are \textit{correctness} and \textit{privacy}. 
+
+Correctness is the property of the protocol to compute the desired function without errors. This is correctly achieved if Alice's and Bob's max values are in the interval $[-2^{31}, 2^{31}-1]$; if either Alice's or Bob's max is out of this range, they abort, because the value cannot be correctly represented. At the end of the communication, both Alice and Bob know the result of the computation.
+
+Privacy regards what one party can infer about the values of the other party from the protocol. By nature, the \textit{max} function does reveal to a party that all the values owned by the other party are bounded by the value returned by the function. In the case of a malicious adversary, this can be exploited to learn more information, but in the case of a semi-honest adversary (which is the case that was treated in class), nothing more is learned, since the protocol does not expose anything about the actual number of bits required to represent Alice's and Bob's values.

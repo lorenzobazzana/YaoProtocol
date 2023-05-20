@@ -1,0 +1,9 @@
+\section{Introduction}
+
+This report is aimed to describe the technical fuctionalities of an implementation of Yao's protocol~\cite{yao} for private \textit{Multi Party Computation} (MPC for short), to compute functions using a set of data owned by different parties, while maintaining privacy of the data itself.
+
+The implementation presented is based on the library repository \href{https://github.com/ojroques/garbled-circuit}{\textit{garbled-circuit}} by Olivier Roques and Emmanuelle Risson (publicly available on GitHub), but extends it in order to accommodate the specific problem at hand, described in the following.
+
+\subsection{Problem description}
+
+This implementation of Yao's protocol is specifically designed to calculate the maximum value in a set of 32-bit integers, partitioned between two parties, called ``Alice" and ``Bob". Following the protocol, Alice is the ``garbler" (the party that generates the circuit and the garbled gates to be sent) and Bob acts as the ``evaluator" (the party that extracts the correct values of the garbled tables and communicates them to the garbler). At the end of the protocol both parties know the maximum value, while none of the other values is exposed.

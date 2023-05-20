@@ -1,0 +1,67 @@
+\section{Script usage}
+
+\subsection{Implementative and running details}
+
+The implementation is done using Python 3.10.9 and requires the following additional python libraries in order to correctly work:
+
+\begin{itemize}
+    \item bitstring 4.0.2
+    \item cryptography 39.0.2
+    \item pyzmq 25.0.0
+    \item sympy 1.11.1
+\end{itemize}
+
+Of all these libraries, ``bitstring" is  an addition specific to this implementation, while all the other packages are required to run the standard version of the GitHub library. The number next to each library indicates the version it was tested with, and it is highly recommended to use that version (or above); all of these packages can be installed via pip3:
+
+\begin{lstlisting}
+    pip3 install bitstring cryptography pyzmq sympy
+\end{lstlisting}
+
+Other packages that are used (such as ``sys" and ``hashlib") are part of the standard Python library and are already available with each Python3 installation.
+
+Another tool used is the ``GNU Make" software (tested version 3.81). While not strictly required to run the scripts, it simplifies the use of this implementation. ``Make" can be downloaded at the \href{https://www.gnu.org/software/make/}{\textit{official GNU software page}}.
+
+\subsection{Running the script}
+
+In order to run the script, the user must open two different terminals in the project root directory: these two terminals will enact the two different parties. If ``GNU Make" is installed, it is sufficient to execute \texttt{make alice} in order to run Alice or \texttt{make Bob} to run Bob; otherwise, it is also possible to run the two parties by executing \texttt{python3 src/mpc.py \textit{party}}, where \texttt{\textit{party}} is either ``alice" or ``bob". This latter method also allows to change the output verbosity with the option \texttt{-l \textit{logging\_value}}, where \texttt{\textit{logging\_value}} can be instantiated with ``debug", ``info", ``warning", ``error", ``critical", adding some additional information on the OT protocol inputs.
+
+After running the script, both of Alice's and Bob's terminals will request some input from the user. Valid inputs are positive and negative integers, while all other types of inputs (for example floating point or strings) will be discarded. After entering both of Alice's and Bob's inputs the computation will start and the result will be printed on both terminals. 
+
+When the computation has ended the result will be compared to the actual expected result computed in a classical way: if it is correct, the program will print a message and exit, while if it is incorrect, it will print an error message along with the expected result and the one obtained from the circuit.
+
+\subsubsection{Running example (Alice)}
+
+\begin{lstlisting}
+    $: make alice
+    python3 src/mpc.py alice
+    Enter Alice's inputs: 2 4 6
+    Enstablishing communication with Bob...
+    Communication enstablished
+    Sent circuit to Bob
+    Input (A):  00000000000000000000000000000110
+    Received binary result:  00000000000000000000000000000110
+    Multiplexer bit: 0
+    Result converted to decimal: 6
+
+    Verifying correctness of the computation...
+    Max computed successfully:  6
+\end{lstlisting}
+
+\subsubsection{Running example (Bob)}
+
+\begin{lstlisting}
+    $: make bob
+    python3 src/mpc.py bob
+    Enter Bob's inputs: 1 3 5
+    Waiting for Alice...
+    Enstablished communication with Alice
+    Received circuit from Alice
+    Input (B):  00000000000000000000000000000101
+    Circuit input (-B): 11111111111111111111111111111011
+    Binary result of the circuit:  00000000000000000000000000000110
+    Multiplexer bit: 0
+    Result converted to decimal: 6
+
+    Verifying correctness of the computation...
+    Max computed successfully:  6
+\end{lstlisting}

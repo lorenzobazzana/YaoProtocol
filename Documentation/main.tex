@@ -1,0 +1,47 @@
+\documentclass{article}
+\usepackage[margin=3cm]{geometry}
+\usepackage{graphicx} % Required for inserting images
+\usepackage[ruled, linesnumbered]{algorithm2e}
+\usepackage{listings}
+\usepackage{xcolor}
+\usepackage{hyperref}
+\hypersetup{
+    hidelinks
+}
+
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+
+\definecolor{bggray}{rgb}{0.95,0.95,0.95}
+\lstdefinestyle{bash}{
+    basicstyle=\ttfamily,
+    backgroundcolor=\color{bggray},
+}
+\lstset{
+    style=bash,
+    inputencoding=utf8,
+    extendedchars=true,
+    literate={à}{{\`a}}1,
+}
+
+
+\title{Technical report on Private Multi Party Computation using Yao's protocol}
+\author{
+     Lorenzo Bazzana \\
+     12245823\\
+     \texttt{\href{mailto:lobazzana@edu.aau.at}{lobazzana@edu.aau.at}}
+     }
+\date{May 2023}
+
+\begin{document}
+
+\maketitle
+
+\input{intro}
+\input{protocol}
+\input{circuit}
+\input{func}
+\input{usage}
+
+\bibliographystyle{plain}
+\bibliography{refs}
+\end{document}

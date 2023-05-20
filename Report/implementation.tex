@@ -1,0 +1,32 @@
+\section{Multi-Party Computation}\label{sec:yao}
+
+\subsection{Yao's Protocol}
+
+Yao's Garbled Circuit protocol is a cryptographic protocol for two-party secure computation, used to compute the result of a function $f(x_1,...,x_n,y_1,...,y_m)$ over two sets of inputs $X=\{x_1,...,x_n\}$ and $Y=\{y_1,...,y_m\}$ owned by two different parties (Alice and Bob), in a way such that at the end of the protocol both parties know the final result but nothing else about the other party's inputs, with the exception of what can be interpreted by the output. 
+
+The protocol uses \textit{garbled circuits}, meaning that the function $f$ is first represented as a boolean circuit, and then it is evaluated over encrypted versions of the gates; this allows to compute the output without revealing the input. Since its first formulation, many improvements to the protocol have been proposed~\cite{yaoefficiency, freeXOR, point-and-permute}, such as the \textit{free-XOR}~\cite{freeXOR} technique.
+
+\subsection{Protocol implementation}
+
+A toy example of a function that can be computed using Yao's protocol is the maximum value in the set of integer values owned by Alice and Bob:
+
+$$
+    f(X,Y) = \max_{v \in (X \cup Y)}(v)
+$$
+
+Since the goal is to implement a secure computation that does not reveal any information on Alice's and Bob's inputs except for the result, the simplest choice is to set up the computation with the following two steps:
+
+\begin{enumerate}
+    \item Alice and Bob both compute locally their own maximum values $a_{max}$ and $b_{max}$
+    \item The global maximum is computed using Yao's protocol, with inputs $a_{max}$ and $b_{max}$. At the end of the computation both Alice and Bob know such value.
+\end{enumerate}
+
+On a high-level approach, we would like to guarantee that the result is \textit{correct} (i.e. the protocol actually computes the function $f$ previously described) and that the computation is \textit{private} (i.e. nothing is learned from the protocol other than what can be deduced from the output)~\cite{yao-proof}.
+
+\subsection{Other MPC techniques}
+
+Other examples of techniques used for function computation using private data are \textit{secret sharing} and \textit{homomorphic encryption}. 
+
+Secret sharing is an MPC method that consists in dividing a secret in different parts (shares) and distributing each share to a different party, so that no party has a complete knowledge of other parties' secrets; the shares can then be used to compute a function (e.g. the sum or the average of all the secrets)~\cite{shamir79}.
+
+Homomorphic encryption allows to compute functions on private encrypted data without having to decrypt it. Although homomorphic encryption can be considered as independent from MPC\footnote{This is because it can be used to outsource computation to a third party, using just our own encrypted data.}, it can also be used for MPC purposes: for example, \cite{private-set-intersection} presents a way to compute private set intersections using homomorphic encryption.

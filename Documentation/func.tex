@@ -1,0 +1,19 @@
+\section{Functionalities and project structure}
+
+The project is structured in different python files, each containing specialized classes and functions for a specific role in the protocol:
+
+\begin{itemize}
+    \item \texttt{mpc.py}: the main file for the execution of the two parties.
+    \item \texttt{alice.py}: the file containing Alice's class and the functions used by the garbler.
+    \item \texttt{bob.py}: the file containing Bob's class and the functions used by the evaluator.
+    \item \texttt{garbler.py}: this file contains the class ``YaoGarbler", from which Alice and Bob inherit. It is taken from the GitHub repository.
+    \item \texttt{circuit\_generator.py}: it contains the function used to generate the circuit. Since for each pair of Alice's and Bob's bits $(a_i, b_i)$ the gates required to compute their sum and carry form a repeating pattern, arbitrarily extending the circuit is fairly easy, but it was decided to use a fixed size in order to make the computation more secure.
+    \item \texttt{ot.py}: in this file there are the necessary functions and classes required to perform the OT. It is the same as the one on the GitHub repository, with a small modification: now the function \texttt{send\_result} also returns the result to Bob, so that he too knows the output and can print it.
+    \item \texttt{yao.py}: this file implements the evaluation part of Yao's protocol. It is the same as the one on the GitHub repository.
+    \item \texttt{util.py}: this file contains utility functions and classes used to simplify and add readability to other classes' functions. It is mostly the same as the file in the GitHub repository, with the addition of the following helper functions:
+    \begin{itemize}
+        \item \texttt{bindigits}: this function takes two integers $n_1$ and $n_2$ and returns the $n_2$-bit binary representation in two's complement of $n_1$.
+        \item \texttt{convert\_result}: this function takes a python dictionary representing the result of the circuit evaluation and returns the relative binary and integer representation.
+        \item \texttt{verify\_computation}: this function verifies the correctness of Yao's protocol's computation, taking its result and comparing it to the maximum computed in a classical way: this is done by reading the contents of two files where Alice and Bob each write their own local maximums, and the global maximum is computed from those two values.
+    \end{itemize}
+\end{itemize}
