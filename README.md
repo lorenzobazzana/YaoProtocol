@@ -14,7 +14,7 @@ The circuit used is similar to an adder: given two numbers $A$ and $B$, to deter
 
 The circuit uses a repeated pattern of carry-outs from the sum of two digits (since we are not interested in the actual value of the sum, we do not use full-adders), and the last carry-out is used as a multiplexer bit to determine the sign of the sum.
 
-![Circuit description](./figures/max.png)
+![Circuit description](./Documentation/tex_src/figures/max.png)
 
 ## Project structure
 
